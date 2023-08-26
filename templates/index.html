@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .email-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .email-card h3 {
+            margin-top: 0;
+        }
+        .attachments ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+        .attachments li {
+            margin-bottom: 5px;
+        }
+        .attachments a {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+<h1>Email Viewer</h1>
+    <form action="/" method="POST">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required>
+        <button type="submit">Filter Emails</button>
+    </form>
+    <ul>
+    <h1>Emails in the given range:</h1>
+    <div id="emailList">
+        {% for email_entry in email_details %}
+        <div class="email-card">
+            <p><strong>Subject:</strong> {{ email_entry.email.Subject }}</p>
+            <p><strong>Date:</strong> {{ email_entry.email.Date }}</p>
+            <p><strong>Sender:</strong> {{ email_entry.email.Sender }}</p>
+            <p><strong>Snippet:</strong> {{ email_entry.email.Snippet }}</p>
+
+            <!-- Displaying the Plain Text Message Body -->
+            <div>
+                <h3>Message Body:</h3>
+                {% if email_entry.email.Message_Body %}
+                <pre>{{ email_entry.email.Message_Body }}</pre>
+                {% else %}
+                <p>Message from a no-reply Sender!.</p>
+                {% endif %}
+            </div>
+            <div>
+                <h3>Message Body in Base64:</h3>
+                {% if email_entry.email.Message_Body_Base64 %}
+                <pre>{{ email_entry.email.Message_Body_Base64 }}</pre>
+                {% else %}
+                <p>Message from a no-reply Sender!.</p>
+                {% endif %}
+            </div>
+
+            <!-- Displaying Attachments -->
+            <div class="attachments">
+                <h3>Attachments:</h3>
+                {% if email_entry.attachments %}
+
+                {% for attachment in email_entry.attachments %}
+
+                    <a href="{{ url_for('attachment', message_id=email_entry.email.id, attachment_id=attachment.attachmentId) }}" target="_blank">{{ attachment.filename }}</a>
+
+                {% endfor %}
+
+                {% else %}
+                <p>No attachments.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

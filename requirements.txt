@@ -34,5 +34,5 @@ simplegmail==4.1.1
 six==1.16.0
 soupsieve==2.4.1
 uritemplate==4.1.1
-urllib3==1.26.16
+urllib3==1.26.18
 Werkzeug==2.3.8
